@@ -46,8 +46,8 @@ verification_task = Task(
 )
 
 editing_task = Task(
-    description="Reescribir el relato editando el texto para garantizar la coherencia, claridad y corrección gramatical. Además si hay algun dato incorrecto en el informe quitalo (Si es ficcion no lo quites)",
-    expected_output="Un RELATO en español (NO HAGAS COMENTARIOS).",
+    description="Reescribir el relato editando el texto para garantizar la coherencia, claridad y corrección gramatical (NO AGREGUES COMENTARIOS ADICIONALES). Además si hay algun dato incorrecto en el informe quitalo (Si es ficcion no lo quites)",
+    expected_output="Un RELATO en español (NO COMENTES NADA).",
     agent=narrative_writer
 )
 
