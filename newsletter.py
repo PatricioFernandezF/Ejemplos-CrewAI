@@ -6,7 +6,6 @@ from langchain_openai import ChatOpenAI
 from crewai import Agent, Task, Process, Crew
 from langchain.utilities import GoogleSerperAPIWrapper
 
-
 # Cargar el archivo .env
 load_dotenv()
 
@@ -55,13 +54,21 @@ escritor = Agent(
     llm=llm,
 )
 
-
+traductor = Agent(
+    role="Traductor",
+    goal="Traducir el informe y el blog al español sin perder el formato ni el contenido",
+    backstory="""Eres un traductor profesional con experiencia en la traducción de textos técnicos y artículos de blogs. Te aseguras de que la traducción 
+    sea precisa, manteniendo el tono y el estilo del texto original.""",
+    verbose=True,
+    allow_delegation=False,
+    llm=llm,
+)
 
 tarea_informe = Task(
     description="""ES MUY IMPORTANTE: No hacer mas de 3 busquedas. Usa y resume datos recopilados de internet para hacer un informe detallado sobre los proyectos emergentes más recientes en IA. Usa SOLO 
     datos recopilados para generar el informe. Tu respuesta final DEBE ser un informe de análisis completo, solo texto, ignora cualquier código u otra cosa 
     que no sea texto. El informe debe tener viñetas con 5-10 nuevos y emocionantes proyectos y herramientas de IA. Escribe nombres de cada herramienta y proyecto. 
-    Cada viñeta DEBE contener 3 frases que se refieran a una compañía específica de IA, producto, modelo o cualquier cosa que hayas encontrado en internet.
+    Cada viñeta DEBE contener 3 frases que se refieran a una compañía específica de IA, producto, modelo o cualquier cosa que hayas encontrado en internet. Puedes buscar en el subreddit LocalLLama entre otros.
     """,
     agent=explorador,
     expected_output="Un informe detallado sobre los proyectos emergentes más recientes en IA."
@@ -69,7 +76,7 @@ tarea_informe = Task(
 
 tarea_blog = Task(
     description="""Escribe una entrada de blog solo con texto y con un título corto pero impactante y al menos 10 párrafos. El blog debe resumir 
-    el informe sobre las últimas herramientas de IA encontradas en el subreddit LocalLLama. El estilo y tono deben ser atractivos y concisos, divertidos, técnicos pero también 
+    el informe sobre las últimas herramientas de IA encontradas por tu compañero investigador senior. El estilo y tono deben ser atractivos y concisos, divertidos, técnicos pero también 
     usar palabras sencillas para el público en general. Nombra proyectos nuevos y emocionantes, aplicaciones y compañías en el mundo de la IA. No 
     escribas "**Párrafo [número del párrafo]:**", en su lugar, comienza el nuevo párrafo en una nueva línea. Escribe nombres de proyectos y herramientas en NEGRITA.
     SIEMPRE incluye enlaces a proyectos/herramientas/documentos de investigación. SOLO incluye información de LocalLLama.
@@ -87,11 +94,18 @@ tarea_blog = Task(
     expected_output="Escribir una entrada de blog interesante y atractiva sobre los últimos proyectos de IA."
 )
 
+tarea_traduccion = Task(
+    description="""Traduce el informe detallado y la entrada del blog al español. Mantén el formato original y asegúrate de que la traducción sea precisa 
+    y clara. El informe debe mantener las viñetas y la estructura, y el blog debe seguir el formato markdown proporcionado. Asegúrate de que todos los 
+    nombres de proyectos y herramientas estén traducidos correctamente.""",
+    agent=traductor,
+    expected_output="Una traducción precisa y clara del informe detallado y la entrada del blog al español."
+)
 
 # instanciar grupo de agentes
 crew = Crew(
-    agents=[explorador, escritor],
-    tasks=[tarea_informe, tarea_blog],
+    agents=[explorador, escritor, traductor],
+    tasks=[tarea_informe, tarea_blog, tarea_traduccion],
     verbose=2,
     process=Process.sequential,  # El proceso secuencial hará que las tareas se ejecuten una tras otra y el resultado de la anterior se pase como contenido adicional a la siguiente.
 )
