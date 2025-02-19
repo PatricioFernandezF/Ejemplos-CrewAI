@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import io,os
 import base64
-from crewai_tools import BaseTool
+from crewai_tools import RagTool
 from datetime import datetime
 
 # Define la función que crea la imagen con la frase
@@ -74,7 +74,7 @@ def create_image_with_text(frase, color, bgcolor):
     return True
 
 # Define la herramienta de CREW AI
-class CreateImageWithTextTool(BaseTool):
+class CreateImageWithTextTool(RagTool):
     name: str = "Crear imagen"
     description: str = "Crea una imagen con el texto"
 

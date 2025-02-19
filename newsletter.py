@@ -4,7 +4,7 @@ import os
 from langchain.agents import Tool
 from langchain_openai import ChatOpenAI
 from crewai import Agent, Task, Process, Crew
-from langchain.utilities import GoogleSerperAPIWrapper
+from langchain_community.utilities import GoogleSerperAPIWrapper
 
 # Cargar el archivo .env
 load_dotenv()
@@ -15,10 +15,11 @@ os.environ["SERPER_API_KEY"] = SERP_API_KEY
 
 # Set environment variables for API keys
 os.environ["OPENAI_API_KEY"] = "NA"
+os.environ["OLLAMA_API_BASE"] = "http://localhost:11434"
 
 llm = ChatOpenAI(
-    model="llama3",
-    base_url="http://localhost:11434/v1"
+    model="ollama/llama3",
+    base_url="http://localhost:11434"
 )
 
 busqueda = GoogleSerperAPIWrapper()
@@ -106,7 +107,7 @@ tarea_traduccion = Task(
 crew = Crew(
     agents=[explorador, escritor, traductor],
     tasks=[tarea_informe, tarea_blog, tarea_traduccion],
-    verbose=2,
+    verbose=True, # se cambio el 2 por True
     process=Process.sequential,  # El proceso secuencial hará que las tareas se ejecuten una tras otra y el resultado de la anterior se pase como contenido adicional a la siguiente.
 )
 

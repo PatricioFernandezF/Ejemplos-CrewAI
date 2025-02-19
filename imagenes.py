@@ -5,11 +5,12 @@ from tools.crearimagen import CreateImageWithTextTool
 
 # Set environment variables for API keys
 os.environ["OPENAI_API_KEY"] = "NA"
+os.environ["OLLAMA_API_BASE"] = "http://localhost:11434"
 
 # Initialize the language model
 llm = ChatOpenAI(
-    model="llama3",
-    base_url="http://localhost:11434/v1"
+    model="ollama/llama3",
+    base_url="http://localhost:11434"
 )
 
 # Initialize the image creation tool

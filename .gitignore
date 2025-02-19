@@ -3,4 +3,6 @@ customscrapetool.py
 imagenes
 __pycache__
 .env
+.venv
+db
 ResultadosBusqueda
